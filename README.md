@@ -26,7 +26,7 @@ It provides secure authentication and CRUD operations for managing **patients**,
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/your-username/healthcare-backend.git
+git clone https://github.com/Di-Abhi/HealthCare-Django.git
 cd healthcare-backend
 ```
 
