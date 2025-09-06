@@ -1,116 +1,132 @@
-#  Django Assignment: Building a Healthcare Backend
+# 🏥 Healthcare Backend
 
-##  Objective
-The goal of this assignment is to create a backend system for a healthcare application using **Django**, **Django REST Framework (DRF)**, and **PostgreSQL**.  
-The system should allow users to register, log in, and manage patient and doctor records securely.  
-
----
-
-## ⚙ Requirements
-- Django & Django REST Framework (DRF) for backend development  
-- PostgreSQL as the database  
-- JWT authentication with `djangorestframework-simplejwt`  
-- RESTful API endpoints for managing patients and doctors  
-- Django ORM for database modeling  
-- Proper error handling and validation  
-- Environment variables for sensitive configurations (`.env`)  
+A backend system for a healthcare application built using **Django**, **Django REST Framework (DRF)**, and **PostgreSQL**.  
+It provides secure authentication and CRUD operations for managing **patients**, **doctors**, and their **mappings**.
 
 ---
 
-##  APIs to be Implemented
-
-###  Authentication APIs
-- `POST /api/auth/register/` → Register a new user with name, email, and password  
-- `POST /api/auth/login/` → Log in a user and return a JWT token  
-
----
-
-###  Patient Management APIs
-- `POST /api/patients/` → Add a new patient (**Authenticated users only**)  
-- `GET /api/patients/` → Retrieve all patients created by the authenticated user  
-- `GET /api/patients/<id>/` → Get details of a specific patient  
-- `PUT /api/patients/<id>/` → Update patient details  
-- `DELETE /api/patients/<id>/` → Delete a patient record  
+## 🚀 Features
+- User registration & login with **JWT authentication** (`djangorestframework-simplejwt`).
+- Manage **patients** with CRUD operations.
+- Manage **doctors** with CRUD operations.
+- Map **patients ↔ doctors**.
+- PostgreSQL database with Django ORM models.
+- Secure endpoints (only authenticated users can modify data).
 
 ---
 
-###  Doctor Management APIs
-- `POST /api/doctors/` → Add a new doctor (**Authenticated users only**)  
-- `GET /api/doctors/` → Retrieve all doctors  
-- `GET /api/doctors/<id>/` → Get details of a specific doctor  
-- `PUT /api/doctors/<id>/` → Update doctor details  
-- `DELETE /api/doctors/<id>/` → Delete a doctor record  
+## 🛠️ Tech Stack
+- **Backend:** Django, Django REST Framework  
+- **Database:** PostgreSQL  
+- **Authentication:** JWT (SimpleJWT)  
 
 ---
 
-###  Patient–Doctor Mapping APIs
-- `POST /api/mappings/` → Assign a doctor to a patient  
-- `GET /api/mappings/` → Retrieve all patient-doctor mappings  
-- `GET /api/mappings/<patient_id>/` → Get all doctors assigned to a specific patient  
-- `DELETE /api/mappings/<id>/` → Remove a doctor from a patient  
+## ⚙️ Setup Instructions
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/your-username/healthcare-backend.git
+cd healthcare-backend
+```
+
+### 2. Create Virtual Environment
+```bash
+python -m venv .venv
+source .venv/bin/activate   # On Windows: .venv\Scripts\activate
+```
+
+### 3. Install Required Packages
+Install dependencies manually:
+```bash
+pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt
+```
+
+### 4. Configure PostgreSQL
+Create a database in PostgreSQL:
+```sql
+CREATE DATABASE healthcare_db;
+```
+
+Then, update your **`settings.py`** file with database details:
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'healthcare_db',
+        'USER': 'your_db_user',
+        'PASSWORD': 'your_db_password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
+
+Also configure **JWT authentication** inside `settings.py`:
+```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+```
+
+### 5. Run Migrations
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 6. Start Server
+```bash
+python manage.py runserver
+```
 
 ---
 
-##  Instructions
-
-1. **Set up project**  
-   ```bash
-   django-admin startproject healthcare_backend
-   cd healthcare_backend
-   python manage.py startapp api
-   ```
-
-2. **Install dependencies**  
-   ```bash
-   pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt python-decouple
-   ```
-
-3. **Configure PostgreSQL** in `settings.py`  
-   ```python
-   DATABASES = {
-       'default': {
-           'ENGINE': 'django.db.backends.postgresql',
-           'NAME': 'healthcare_db',
-           'USER': 'your_username',
-           'PASSWORD': 'your_password',
-           'HOST': 'localhost',
-           'PORT': '5432',
-       }
-   }
-   ```
-
-4. **Use environment variables** with `.env` file  
-   ```env
-   SECRET_KEY=your_secret_key
-   DEBUG=True
-   DATABASE_NAME=healthcare_db
-   DATABASE_USER=your_username
-   DATABASE_PASSWORD=your_password
-   DATABASE_HOST=localhost
-   DATABASE_PORT=5432
-   ```
-
-5. **Apply migrations**  
-   ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
-
-6. **Run server**  
-   ```bash
-   python manage.py runserver
-   ```
-
-7. **Test APIs** using Postman or any API client.  
+## 🔑 Authentication APIs
+| Method | Endpoint                  | Description |
+|--------|---------------------------|-------------|
+| POST   | `/api/auth/register/`     | Register a new user |
+| POST   | `/api/auth/login/`        | Login & get JWT |
+| POST   | `/api/auth/token/refresh/`| Refresh JWT |
 
 ---
 
-##  Expected Outcome
-- Users can **register and log in** with JWT authentication  
-- Authenticated users can **add/manage patients and doctors**  
-- Patients can be **assigned to doctors**  
-- Data is stored securely in **PostgreSQL**  
+## 👩‍⚕️ Patient APIs
+| Method | Endpoint               | Description |
+|--------|------------------------|-------------|
+| POST   | `/api/patients/`       | Add new patient |
+| GET    | `/api/patients/`       | List all patients of user |
+| GET    | `/api/patients/{id}/`  | Get patient details |
+| PUT    | `/api/patients/{id}/`  | Update patient |
+| DELETE | `/api/patients/{id}/`  | Delete patient |
 
 ---
 
-## 🚀 Good luck with your assignment!
+## 👨‍⚕️ Doctor APIs
+| Method | Endpoint              | Description |
+|--------|-----------------------|-------------|
+| POST   | `/api/doctors/`       | Add new doctor |
+| GET    | `/api/doctors/`       | List all doctors |
+| GET    | `/api/doctors/{id}/`  | Get doctor details |
+| PUT    | `/api/doctors/{id}/`  | Update doctor |
+| DELETE | `/api/doctors/{id}/`  | Delete doctor |
+
+---
+
+## 🔗 Patient–Doctor Mapping APIs
+| Method | Endpoint                         | Description |
+|--------|----------------------------------|-------------|
+| POST   | `/api/mappings/`                 | Assign doctor to patient |
+| GET    | `/api/mappings/`                 | List all mappings |
+| GET    | `/api/mappings/{patient_id}/`    | Get all doctors for a patient |
+| DELETE | `/api/mappings/{id}/`            | Remove doctor from patient |
+
+---
+
+## ✅ Expected Outcome
+- Users can **register & log in** with JWT.  
+- Authenticated users can **manage patients and doctors**.  
+- Patients can be **assigned to doctors**.  
+- Data stored securely in **PostgreSQL**.  
