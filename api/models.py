@@ -27,17 +27,14 @@ class Doctor(models.Model):
         return f"({self.id}) {self.name} - {self.speciality or 'General'}"
     
 
-class Appointment (models.Model):
-    patient = models.ForeignKey(Patient, related_name='appointments', on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, related_name='appointments', on_delete=models.CASCADE)
-    appointment_date = models.DateTimeField()
-    assigned_by=models.ForeignKey(User,related_name='assigned_appointments', on_delete=models.CASCADE)
-    reason = models.TextField(blank=True,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+class PatientDoctorMapping(models.Model):
+    patient = models.ForeignKey(Patient, related_name="mappings", on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, related_name="mappings", on_delete=models.CASCADE)
+    assigned_by = models.ForeignKey(User, related_name="assigned_mappings", on_delete=models.SET_NULL, null=True)
+    assigned_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('patient', 'doctor', 'appointment_date')
+        unique_together = ("patient", "doctor")
 
     def __str__(self):
-        return f"Appointment {self.id} - Patient: {self.patient.name}, Doctor: {self.doctor.name} on {self.appointment_date}"
+        return f"Patient {self.patient_id} -> Doctor {self.doctor_id}"

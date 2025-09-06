@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Patient, Doctor, Appointment
+from .models import Patient, Doctor, PatientDoctorMapping
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 
@@ -79,15 +79,12 @@ class DoctorSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ['id', 'created_at', 'updated_at']
 
-class AppointmentSerializer(serializers.ModelSerializer):
+class PatientDoctorMappingSerializer(serializers.ModelSerializer):
     assigned_by = serializers.ReadOnlyField(source='assigned_by.username')
-    patient_details = PatientSerializer(source='patient', read_only=True)
-    doctor_details = DoctorSerializer(source='doctor', read_only=True)
+    patient_detail = PatientSerializer(source="patient", read_only=True)
+    doctor_detail = DoctorSerializer(source="doctor", read_only=True)
 
     class Meta:
-        model = Appointment
-        fields = (
-            "id", "patient", "patient_details", "doctor", "doctor_details",
-            "appointment_date", "reason", "assigned_by", "created_at", "updated_at"
-        )
-        read_only_fields = ("id", "created_at", "updated_at")
+        model = PatientDoctorMapping
+        fields = ("id", "patient", "doctor", "patient_detail", "doctor_detail", "assigned_by", "assigned_at")
+        read_only_fields = ("id", "assigned_by", "assigned_at")
